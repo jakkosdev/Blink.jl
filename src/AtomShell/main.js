@@ -85,8 +85,7 @@ function createWindow(opts) {
     nodeIntegration: true,
     contextIsolation: false,
   };
-  console.log("opts is:");
-  console.log(opts);
+
   var win = new BrowserWindow(opts);
   windows[win.id] = win;
   if (opts.url) {
@@ -106,8 +105,6 @@ function createWindow(opts) {
 
   return win.id;
 }
-
-function 
 
 function evalwith(obj, code) {
   return (function() {
