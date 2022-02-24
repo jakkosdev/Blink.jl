@@ -3,7 +3,9 @@ import BinDeps
 rm′(f) = (isdir(f) || isfile(f)) && rm(f, recursive = true)
 
 # This is the last version that allows remote
-const version = "13.6.9"
+# const version = "13.6.9"
+# This is the last version that allows callbacks instead of promises
+const version = "6.1.12"
 
 folder() = normpath(joinpath(@__FILE__, "../../../deps"))
 
