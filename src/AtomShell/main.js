@@ -84,6 +84,7 @@ function createWindow(opts) {
   opts["webPreferences"] = {
     nodeIntegration: true,
     contextIsolation: false,
+    enableRemoteModule: true
   };
 
   var win = new BrowserWindow(opts);
