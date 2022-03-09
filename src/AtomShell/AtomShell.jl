@@ -2,6 +2,7 @@ module AtomShell
 
 using Sockets
 using WebIO
+using RelocatableFolders
 
 abstract type Shell end
 

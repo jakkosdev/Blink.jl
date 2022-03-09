@@ -16,7 +16,7 @@ function initwebio!(w::Window)
 
     @js w begin
         window._webIOBundlePath = $(WebIO.bundlepath)
-        require($(normpath(joinpath(@__DIR__, "webio.js"))))
+        require($(normpath(joinpath(folder_path, "src", "AtomShell", "webio.js"))))
     end
 
     comm = WebIOBlinkComm(w)

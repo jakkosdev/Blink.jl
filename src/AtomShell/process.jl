@@ -13,7 +13,10 @@ folder. Example:
 
   resolve_blink_asset("src", "Blink.jl") -> /home/<user>/.julia/v0.6/Blink/src/Blink.jl
 """
-resolve_blink_asset(path...) = abspath(joinpath(@__DIR__, "..", "..", path...))
+
+resolve_blink_asset(path...) = joinpath(folder_path, path...)
+
+
 
 @deprecate resolve(pkg, path...) resolve_blink_asset(path...)
 
@@ -57,16 +60,17 @@ end
 Electron(proc, sock) = Electron(proc, sock, Dict())
 
 @static if Sys.isapple()
-  const _electron = resolve_blink_asset("deps/Julia.app/Contents/MacOS/Julia")
+  _electron() = resolve_blink_asset("deps/Julia.app/Contents/MacOS/Julia")
 elseif Sys.islinux()
-  const _electron = resolve_blink_asset("deps/atom/electron")
+  _electron() = resolve_blink_asset("deps/atom/electron")
 elseif Sys.iswindows()
-  const _electron = resolve_blink_asset("deps", "atom", "electron.exe")
+  _electron() = resolve_blink_asset("deps", "atom", "electron.exe")
 end
-const mainjs = resolve_blink_asset("src", "AtomShell", "main.js")
+mainjs() = resolve_blink_asset("src", "AtomShell", "main.js")
 
 function electron()
-  path = get(ENV, "ELECTRON_PATH", _electron)
+  # path = get(ENV, "ELECTRON_PATH", _electron)
+  path = _electron()
   isfile(path) || error("Cannot find Electron. Try `Blink.AtomShell.install()`.")
   return path
 end
@@ -89,7 +93,7 @@ function init(; debug = false)
   p, dp = port(), port()
   debug && inspector(dp)
   dbg = debug ? "--debug=$dp" : []
-  proc = (debug ? run_rdr : run)(`$(electron()) $dbg $mainjs port $p`; wait=false)
+  proc = (debug ? run_rdr : run)(`$(electron()) $dbg $(mainjs()) port $p`; wait=false)
   conn = try_connect(ip"127.0.0.1", p)
   shell = Electron(proc, conn)
   initcbs(shell)

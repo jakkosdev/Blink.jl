@@ -7,21 +7,24 @@ rm′(f) = (isdir(f) || isfile(f)) && rm(f, recursive = true)
 # This is the last version that allows callbacks instead of promises
 const version = "6.1.12"
 
-folder() = normpath(joinpath(@__FILE__, "../../../deps"))
+
+folder_path = @path normpath(joinpath(@__FILE__, "../../.."))
+
+deps_folder() = joinpath(folder_path, "deps")
 
 @static if Sys.isapple()
-    uninstall() = map(rm′, filter(x -> !endswith(x, "build.jl"), readdir(folder())))
+    uninstall() = map(rm′, filter(x -> !endswith(x, "build.jl"), readdir(deps_folder())))
 else
-    uninstall() = rm′(joinpath(folder(), "atom"))
+    uninstall() = rm′(joinpath(deps_folder(), "atom"))
 end
 
 isinstalled() = Sys.isapple() ?
-    isfile(joinpath(folder(), "version")) :
-    isdir(joinpath(folder(), "atom"))
+    isfile(joinpath(deps_folder(), "version")) :
+    isdir(joinpath(deps_folder(), "atom"))
 
 
 function install()
-  dir = folder()
+  dir = deps_folder()
   if Sys.isapple()
     _icons = normpath(joinpath(@__FILE__, "../../../res/julia-icns.icns"))
   end

@@ -7,6 +7,7 @@ using Distributed: Future
 using Sockets
 using Logging
 using Base64: stringmime
+using RelocatableFolders
 
 include("rpc/rpc.jl")
 include("content/content.jl")
