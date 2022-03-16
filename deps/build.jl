@@ -6,8 +6,8 @@ include(joinpath(@__DIR__, "../src/AtomShell/install.jl"))
 
 function get_installed_version()
     _path = Sys.isapple() ?
-        joinpath(folder(), "version") :
-        joinpath(folder(), "atom", "version")
+        joinpath(deps_folder(), "version") :
+        joinpath(deps_folder(), "atom", "version")
     strip(read(_path, String), 'v')
 end
 
