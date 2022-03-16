@@ -1,5 +1,6 @@
 module BuildBlink
 # put into module b/c some globals are defined in install.jl
+using RelocatablePaths
 
 include(joinpath(@__DIR__, "../src/AtomShell/install.jl"))
 
