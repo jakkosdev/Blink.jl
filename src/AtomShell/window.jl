@@ -38,7 +38,11 @@ const window_defaults = @d(:url => "about:blank",
                            "use-content-size" => true,
                            :icon => resolve_blink_asset("deps", "julia.png"))
 
-raw_window(a::Electron, opts) = @js a createWindow($(merge(window_defaults, opts)))
+function raw_window(a::Electron, opts) 
+  sleep(0.1)
+  println(a)
+  @js a createWindow($(merge(window_defaults, opts)))
+end
 
 function Window(a::Shell, opts::AbstractDict = Dict(); async=false)
   # TODO: Custom urls don't support async b/c don't load Blink.js. (Same as https://github.com/JunoLab/Blink.jl/issues/150)
@@ -50,11 +54,11 @@ end
 function Window(a::Shell, content::Page, opts::AbstractDict = Dict(); async=false)
   id, callback_cond = Blink.callback!()
   url = Blink.localurl(content) * "?callback=$id"
-
   # Create the window.
   opts = merge(opts, Dict(:url => url))
-  w = Window(raw_window(a, opts), a, content, nothing)
-
+  println("_")
+  rw = raw_window(a, opts)
+  w = Window(rw, a, content, nothing)
   # Note: we have to use a task here because of the use of Condition throughout
   # the codebase (it might be better to use Channel or Future which are not
   # edge-triggered). We also need to initialize this after the Window
@@ -71,7 +75,6 @@ function Window(a::Shell, content::Page, opts::AbstractDict = Dict(); async=fals
   if !async
     wait(w)
   end
-
   return w
 end
 
